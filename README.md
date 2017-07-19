@@ -18,7 +18,6 @@ superagent
   .retry(2, 5000) // retry twice before responding, wait 5 seconds between failures
   .end(onresponse);
 
-
 function onresponse (err, res) {
   console.log(res.status, res.headers);
   console.log(res.body);
