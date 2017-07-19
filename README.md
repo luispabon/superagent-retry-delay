@@ -4,21 +4,18 @@
 
   It will retry on any error condition.
 
-  This library is based on (superagent-retry)[https://github.com/segmentio/superagent-retry]
-
-
-  [superagent]: https://github.com/visionmedia/superagent
+  This library is based on [superagent-retry](https://github.com/segmentio/superagent-retry) and extends [superagent](https://github.com/visionmedia/superagent)
 
 ## Usage
-friends@segment.io
+
 ```javascript
 // With superagent
-var superagent = require('superagent');
+const superagent = require('superagent');
 require('superagent-retry-delay')(superagent);
 
 superagent
   .get('https://segment.io')
-  .retry(2, 5000) // retry twice before responding
+  .retry(2, 5000) // retry twice before responding, wait 5 seconds between failures
   .end(onresponse);
 
 
