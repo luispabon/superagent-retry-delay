@@ -3,10 +3,14 @@
  */
 
 module.exports = function (superagent) {
-  const Request = superagent.Request;
-  Request.prototype.retry = retry;
-  return superagent;
-};
+  const Request = superagent.Request
+
+  Request.prototype.oldRetry = Request.prototype.retry
+  Request.prototype.retry = retry
+  Request.prototype.callback = callback
+
+  return superagent
+}
 
 /**
  * Works out whether we should retry, based on the number of retries, on any passed
@@ -16,83 +20,61 @@ module.exports = function (superagent) {
  * @param {Error} err
  * @param {Response} res
  */
-function shouldRetry(retries, err, res) {
-  if (retries > 0) {
-    // On any error, retry
-    if (err !== null && err !== undefined) {
-      return true
-    }
+function shouldRetry(err, res) {
 
-    // Some responses are non-success, yet no error is thrown - inspect status
-    if (res.status < 200 || res.status >= 400) {
-      return true
-    }
+  // On any error, retry
+  if (err !== null && err !== undefined) {
+    return true
+  }
 
+  // Some responses are non-success, yet no error is thrown - inspect status
+  if (res.status < 200 || res.status >= 400) {
+    return true
   }
 
   return false
 }
 
 /**
- * Sets the amount of times to retry the request and the delay in miliseconds
- * 
- * @param  {Number} retries
- * @param  {Number} delay 
+ * Override Request callback to set a timeout on the call to retry.
+ *
+ * This overrides crucial behaviour: it will retry on ANY error (eg 401...) due to shouldRetry having 
+ * different behaviour.
+ *
+ * @param err
+ * @param res
+ * @return {Object}
  */
-function retry(retries, delay) {
-
-  if (retries < 1) {
-    throw Error('retries must be a positive number bigger than 1')
+function callback(err, res) {
+  if (this._maxRetries && this._retries++ < this._maxRetries && shouldRetry(err, res)) {
+    var req = this
+    return setTimeout(function () {
+      return req._retry()
+    }, this._retryDelay)
   }
 
-  const self = this
-  const oldEnd = this.end;
+  var fn = this._callback
+  this.clearTimeout()
 
-  this.end = function (fn) {
-    const timeout = this._timeout;
+  if (err) {
+    if (this._maxRetries) err.retries = this._retries - 1
+    this.emit('error', err)
+  }
 
-    function attemptRetry() {
-      return oldEnd.call(self, function (err, res) {
-        if (shouldRetry(retries, err, res) === false) {
-          return fn && fn(err, res);
-        }
-
-        retries--;
-        setTimeout(function () {
-          reset(self, timeout);
-
-          return attemptRetry();
-        }, delay);
-      });
-    }
-
-    return attemptRetry();
-  };
-
-  return this;
+  fn(err, res)
 }
 
 
 /**
- * HACK: Resets the internal state of a request.
+ * Override Request retry to also set a delay.
+ *
+ * In miliseconds.
+ *
+ * @param {Number} retries
+ * @param {number} delay
+ * @return {retry}
  */
-function reset(request, timeout) {
-  const headers = request.req._headers;
-  const path = request.req.path;
-
-  request.req.abort();
-  request.called = false;
-  request.timeout(timeout);
-  delete request.req;
-  delete request._timer;
-
-  for (var k in headers) {
-    request.set(k, headers[k]);
-  }
-
-  if (!request.qs) {
-    request.req.path = path;
-  }
+function retry(retries, delay) {
+  this._retryDelay = delay || 0
+  return this.oldRetry(retries)
 }
-
-

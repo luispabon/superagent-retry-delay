@@ -4,6 +4,8 @@
 
   It will retry on any error condition.
 
+  v2 relies on superagent's internal retry mechanism for retrying, added on superagent 3.5. Use v1 otherwise.
+
   This library is based on [superagent-retry](https://github.com/segmentio/superagent-retry) and extends [superagent](https://github.com/visionmedia/superagent)
 
 ## Usage

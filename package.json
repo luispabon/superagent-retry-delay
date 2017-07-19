@@ -1,7 +1,8 @@
 {
   "name": "superagent-retry-delay",
-  "version": "1.0.0",
+  "version": "2.0.0",
   "description": "A retrying layer for a superagent request with delay support",
+  "license": "MIT",
   "keywords": [
     "superagent",
     "retry",
@@ -14,15 +15,15 @@
   },
   "dependencies": {},
   "peerDependencies": {
-    "superagent": "*"
+    "superagent": "~3.5.0"
   },
   "devDependencies": {
-    "eslint": "^4.2.0",
-    "eslint-config-standard": "^10.2.1",
-    "express": "~3.3.8",
+    "eslint": "*",
+    "eslint-plugin-standard": "^3.0.1",
+    "express": "*",
     "mocha": "*",
     "should": "*",
-    "superagent": "~0.20.0"
+    "superagent": "~3.5.0"
   },
   "main": "src/index"
 }
