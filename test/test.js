@@ -18,10 +18,14 @@ describe('superagent-retry-delay', function () {
     let server
 
     before(function (done) {
+
       app.get('/', function (req, res, next) {
         requests++
-        if (requests < 4) res.send(503)
-        else res.send('hello!')
+        if (requests > 4) {
+          res.send('hello!')
+        } else {
+          res.send(503)
+        }
       })
 
       server = app.listen(port, done)
@@ -35,16 +39,13 @@ describe('superagent-retry-delay', function () {
           res.status.should.eql(503)
         })
 
-      setTimeout(function () {
-        agent
-          .get('http://localhost:' + port)
-          .retry(4, 13)
-          .end(function (err, res) {
-            res.text.should.eql('hello!')
-            requests.should.eql(4)
-            done(err)
-          })
-      }, 100)
+      agent
+        .get('http://localhost:' + port)
+        .retry(5, 17)
+        .end(function (err, res) {
+          res.text.should.eql('hello!')
+          done(err)
+        })
     })
 
     after(function (done) { server.close(done) })
@@ -58,9 +59,19 @@ describe('superagent-retry-delay', function () {
 
     before(function (done) {
       app.get('/', function (req, res, next) {
+        // console.log(requests)
         requests++
-        if (requests < 4) res.send(500)
-        else res.send('hello!')
+        if (requests > 4) {
+          res.send('hello!')
+        } else {
+          res.send(500)
+        }
+
+
+
+
+        // if (requests < 4) res.send(500)
+        // else res.send('hello!')
       })
 
       server = app.listen(port, done)
@@ -74,17 +85,96 @@ describe('superagent-retry-delay', function () {
           res.status.should.eql(500)
         })
 
-      setTimeout(function () {
         agent
           .get('http://localhost:' + port)
-          .retry(5, 10)
+          .retry(5, 13)
           .end(function (err, res) {
-            console.log('requests', requests)
             res.text.should.eql('hello!')
-            requests.should.eql(4)
+            requests.should.eql(5)
             done(err)
           })
-      }, 100)
+    })
+
+    after(function (done) { server.close(done) })
+  })
+
+  describe('404 errors', function () {
+    let requests = 0
+    const port = 10410
+    const app = express()
+    let server
+
+    before(function (done) {
+      app.get('/', function (req, res, next) {
+
+        requests++
+        if (requests > 4) {
+          res.send('hello!')
+        } else {
+          res.send(404)
+        }
+      })
+
+      server = app.listen(port, done)
+    })
+
+    it('should retry on errors', function (done) {
+
+      agent
+        .get('http://localhost:' + port)
+        .end(function (err, res) {
+          res.status.should.eql(404)
+        })
+
+      agent
+        .get('http://localhost:' + port)
+        .retry(5, 13)
+        .end(function (err, res) {
+          res.text.should.eql('hello!')
+          requests.should.eql(5)
+          done(err)
+        })
+    })
+
+    after(function (done) { server.close(done) })
+  })
+
+  describe('401 errors', function () {
+    let requests = 0
+    const port = 10410
+    const app = express()
+    let server
+
+    before(function (done) {
+      app.get('/', function (req, res, next) {
+
+        requests++
+        if (requests > 4) {
+          res.send('hello!')
+        } else {
+          res.send(401)
+        }
+      })
+
+      server = app.listen(port, done)
+    })
+
+    it('should retry on errors', function (done) {
+
+      agent
+        .get('http://localhost:' + port)
+        .end(function (err, res) {
+          res.status.should.eql(401)
+        })
+
+      agent
+        .get('http://localhost:' + port)
+        .retry(5, 13)
+        .end(function (err, res) {
+          res.text.should.eql('hello!')
+          requests.should.eql(5)
+          done(err)
+        })
     })
 
     after(function (done) { server.close(done) })
