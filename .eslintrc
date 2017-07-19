@@ -1,0 +1,15 @@
+{
+  "extends" : [
+    "standard"
+  ],
+  "globals" : {
+    "expect" : false,
+    "should" : false,
+    "sinon"  : false
+  },
+  "rules": {
+    "semi" : [2, "never"],
+    "max-len": [2, 120, 2],
+    "generator-star-spacing": 0
+  }
+}
