@@ -2,7 +2,7 @@
 
   Extends the node version of [`visionmedia/superagent`][superagent]'s `Request`, adds a `.retry` method to add retrying logic to the request. Calling this will retry the request however many additional times you'd like after a specified delay in miliseconds.
 
-  It will retry on any error condition.
+  It will retry on any error condition, except for the list of response codes optionally supplied.
 
   v2 relies on superagent's internal retry mechanism for retrying, added on superagent 3.5. Use v1 otherwise.
 
@@ -17,7 +17,7 @@ require('superagent-retry-delay')(superagent);
 
 superagent
   .get('https://segment.io')
-  .retry(2, 5000) // retry twice before responding, wait 5 seconds between failures
+  .retry(2, 5000, [401, 404]) // retry twice before responding, wait 5 seconds between failures, do not retry when response is success, or 401 or 404
   .end(onresponse);
 
 function onresponse (err, res) {
@@ -35,10 +35,13 @@ require('superagent-retry-delay')(superagent);
 const supertest = require('supertest');
 ```
 
+## Mocha users
+
+  Ensure your mocha timeout for tests (default is 2000ms) is long enough to accommodate for all possible retries, including the specified delays.
 
 ## Retrying Cases
 
-  Currently the retrying logic checks for any error.
+  Currently the retrying logic checks for any error, but it will allow a list of status codes to avoid retrying - this is handy if you're testing say 404's.
 
 
 ## License

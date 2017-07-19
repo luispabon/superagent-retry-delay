@@ -42,6 +42,43 @@ describe('superagent-retry-delay', function () {
     after(function (done) { server.close(done) })
   })
 
+  describe('handled errors', function () {
+    let requests = 0
+    const port = 10410
+    const app = express()
+    let server
+
+    before(function (done) {
+      app.get('/', function (req, res, next) {
+
+        requests++
+        if (requests === 1) {
+          res.sendStatus(401)
+        } else if (requests === 2) {
+          res.sendStatus(409)
+        } else {
+          res.sendStatus(404)
+        }
+      })
+
+      server = app.listen(port, done)
+    })
+
+    it('should not retry on handled errors', function (done) {
+
+      agent
+        .get('http://localhost:' + port)
+        .retry(5, 13, [404])
+        .end(function (err, res) {
+          res.status.should.eql(404)
+          requests.should.eql(3)
+          done(err)
+        })
+    })
+
+    after(function (done) { server.close(done) })
+  })
+
   describe('errors', function () {
     let requests = 0
     const port = 10410
