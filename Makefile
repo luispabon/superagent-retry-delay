@@ -2,6 +2,7 @@
 test:
 	@./node_modules/.bin/mocha \
 		--require should \
-		--reporter spec
+		--reporter spec \
+		tests
 
-.PHONY: test
+.PHONY: tests
