@@ -1,1 +1,7 @@
-node_modules/
+.idea
+.DS_STORE
+*.DS_STORE
+node_modules
+.config
+.npm
+reports
