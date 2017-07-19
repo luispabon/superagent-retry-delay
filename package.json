@@ -1,24 +1,27 @@
 {
-  "name": "superagent-retry",
-  "version": "0.6.0",
-  "description": "A retrying layer for a superagent request",
+  "name": "superagent-retry-delay",
+  "version": "0.0.1",
+  "description": "A retrying layer for a superagent request with delay support",
   "keywords": [
     "superagent",
-    "retry"
+    "retry",
+    "delay"
   ],
-  "author": "Segmentio <friends@segment.io>",
+  "author": "Luis Pabon <luis.pabon@auronconsulting.co.uk>",
   "repository": {
     "type": "git",
-    "url": "git://github.com/segmentio/superagent-retry.git"
+    "url": "git://github.com/luispabon/superagent-retry-delay.git"
   },
   "dependencies": {},
   "peerDependencies": {
     "superagent": "*"
   },
   "devDependencies": {
+    "eslint": "^4.2.0",
+    "eslint-config-standard": "^10.2.1",
+    "express": "~3.3.8",
     "mocha": "*",
     "should": "*",
-    "express": "~3.3.8",
     "superagent": "~0.20.0"
   },
   "main": "lib/index"

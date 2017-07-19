@@ -1,4 +1,4 @@
-var express     = require('express')
+const express     = require('express')
   , agent       = require('superagent')
   , should      = require('should')
   , assert      = require('assert')
@@ -14,7 +14,7 @@ require('../')(agent);
 describe('superagent-retry', function () {
 
   describe('errors', function () {
-    var requests = 0
+    const requests = 0
       , port = 10410
       , app = express()
       , server;
@@ -53,7 +53,7 @@ describe('superagent-retry', function () {
   });
 
   describe('500 errors', function () {
-    var requests = 0
+    const requests = 0
       , port = 10410
       , app = express()
       , server;
@@ -93,7 +93,7 @@ describe('superagent-retry', function () {
   });
 
   describe('resets', function () {
-    var requests = 0
+    const requests = 0
       , port = 10410
       , app = express()
       , server;
@@ -108,7 +108,7 @@ describe('superagent-retry', function () {
         if (requests > 10) res.send('hello!');
       });
 
-      var url = 'http://localhost:' + port + '/client-timeouts';
+      const url = 'http://localhost:' + port + '/client-timeouts';
 
       agent
         .get(url)
@@ -128,8 +128,8 @@ describe('superagent-retry', function () {
     });
 
     it('should retry with the same headers', function(done){
-      var url = 'http://localhost:' + port + '/headers';
-      var requests = 0;
+      const url = 'http://localhost:' + port + '/headers';
+      const requests = 0;
 
       app.get('/headers', function(req, res){
         if (++requests > 3) return res.send(req.headers);
@@ -149,8 +149,8 @@ describe('superagent-retry', function () {
     })
 
     it('should re-send data and headers correctly', function(done){
-      var url = 'http://localhost:' + port + '/data';
-      var requests = 0;
+      const url = 'http://localhost:' + port + '/data';
+      const requests = 0;
 
       app.post('/data', express.bodyParser(), function(req, res){
         if (++requests < 3) return;
@@ -171,7 +171,7 @@ describe('superagent-retry', function () {
     })
 
     it('should retry on server resets', function (done) {
-      var requests = 0;
+      const requests = 0;
 
       app.get('/server-timeouts', function (req, res, next) {
         requests++;
@@ -179,7 +179,7 @@ describe('superagent-retry', function () {
         res.setTimeout(1);
       });
 
-      var url = 'http://localhost:' + port + '/server-timeouts';
+      const url = 'http://localhost:' + port + '/server-timeouts';
 
       agent
         .get(url)
@@ -197,13 +197,13 @@ describe('superagent-retry', function () {
     });
 
     it('should retry on server connection refused', function (done) {
-      var url = 'http://localhost:' + (port+1) + '/hello';
-      var request = agent.get(url);
-      var allowedRetries = 10;
-      var allowedTries = allowedRetries + 1;
-      var triesCount = 0
+      const url = 'http://localhost:' + (port+1) + '/hello';
+      const request = agent.get(url);
+      const allowedRetries = 10;
+      const allowedTries = allowedRetries + 1;
+      const triesCount = 0
 
-      var oldEnd = request.end;
+      const oldEnd = request.end;
       request.end = function(fn) {
         triesCount++;
         oldEnd.call(request, fn);
@@ -219,14 +219,14 @@ describe('superagent-retry', function () {
     });
 
     it('should retry with the same querystring', function(done){
-      var requests = 0;
+      const requests = 0;
 
       app.get('/qs-data', function(req, res){
         if (++requests > 10) return res.json({ foo: req.query.foo });
         res.setTimeout(1);
       });
 
-      var url = 'http://localhost:' + port + '/qs-data';
+      const url = 'http://localhost:' + port + '/qs-data';
 
       agent
         .get(url)

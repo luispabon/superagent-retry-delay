@@ -1,19 +1,24 @@
-# superagent-retry
+# superagent-retry-delay
 
-  Extends the node version of [`visionmedia/superagent`][superagent]'s `Request`, adds a `.retry` method to add retrying logic to the request. Calling this will retry the request however many additional times you'd like.
+  Extends the node version of [`visionmedia/superagent`][superagent]'s `Request`, adds a `.retry` method to add retrying logic to the request. Calling this will retry the request however many additional times you'd like after a specified delay in miliseconds.
+
+  It will retry on any error condition.
+
+  This library is based on (superagent-retry)[https://github.com/segmentio/superagent-retry]
 
 
   [superagent]: https://github.com/visionmedia/superagent
 
 ## Usage
-
+friends@segment.io
 ```javascript
+// With superagent
 var superagent = require('superagent');
-require('superagent-retry')(superagent);
+require('superagent-retry-delay')(superagent);
 
 superagent
   .get('https://segment.io')
-  .retry(2) // retry twice before responding
+  .retry(2, 5000) // retry twice before responding
   .end(onresponse);
 
 
@@ -21,27 +26,28 @@ function onresponse (err, res) {
   console.log(res.status, res.headers);
   console.log(res.body);
 }
+
 ```
+
+```javascript
+// With supertest
+const superagent = require('superagent');
+require('superagent-retry-delay')(superagent);
+
+const supertest = require('supertest');
+```
+
 
 ## Retrying Cases
 
-  Currently the retrying logic checks for:
-
-  * ECONNRESET
-  * ECONNREFUSED
-  * ETIMEDOUT
-  * EADDRINFO
-  * ESOCKETTIMEDOUT
-  * superagent client timeouts
-  * bad gateway errors (502, 503, 504 statuses)
-  * Internal Server Error (500 status)
+  Currently the retrying logic checks for any error.
 
 
 ## License
 
 (The MIT License)
 
-Copyright (c) 2013 Segmentio &lt;friends@segment.io&gt;
+Copyright (c) 2013 Luis Pabon &lt;http://github.com/luispabon&gt;
 
 Permission is hereby granted, free of charge, to any person obtaining
 a copy of this software and associated documentation files (the
