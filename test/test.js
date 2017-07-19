@@ -6,7 +6,7 @@ const http = require('http')
 
 http.globalAgent.maxSockets = 2000
 
-require('../src/index')(agent)
+require('../')(agent)
 
 describe('superagent-retry-delay', function () {
 

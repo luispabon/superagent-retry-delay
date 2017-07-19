@@ -24,5 +24,5 @@
     "should": "*",
     "superagent": "~0.20.0"
   },
-  "main": "lib/index"
+  "main": "src/index"
 }
