@@ -1,6 +1,6 @@
 {
   "name": "superagent-retry-delay",
-  "version": "0.0.1",
+  "version": "1.0.0",
   "description": "A retrying layer for a superagent request with delay support",
   "keywords": [
     "superagent",
