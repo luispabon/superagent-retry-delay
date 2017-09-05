@@ -29,7 +29,6 @@ function shouldRetry(err, res, allowedStatuses) {
   ]
 
   if (err && err.code && ~ERROR_CODES.indexOf(err.code)) {
-    console.log('fo')
     return true
   }
 
