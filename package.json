@@ -20,11 +20,19 @@
   "devDependencies": {
     "eslint": "*",
     "eslint-config-standard": "^10.2.1",
+    "eslint-plugin-import": "^2.7.0",
+    "eslint-plugin-mocha": "^4.11.0",
+    "eslint-plugin-node": "^5.1.1",
+    "eslint-plugin-promise": "^3.5.0",
     "eslint-plugin-standard": "^3.0.1",
     "express": "*",
     "mocha": "*",
     "should": "*",
     "superagent": "~3.5.0"
+  },
+  "scripts": {
+    "test": "node_modules/.bin/mocha --recursive --timeout=20000 tests/",
+    "lint": "node_modules/.bin/eslint src tests"
   },
   "main": "src/index"
 }
