@@ -20,7 +20,7 @@ module.exports = function (superagent) {
  * @param {Error} err
  * @param {Response} res
  */
-function shouldRetry(err, res, allowedStatuses) {
+function shouldRetry (err, res, allowedStatuses) {
   const ERROR_CODES = [
     'ECONNRESET',
     'ETIMEDOUT',
@@ -45,7 +45,7 @@ function shouldRetry(err, res, allowedStatuses) {
   }
 
   // Superagent timeout
-  if (err && 'timeout' in err && err.code == 'ECONNABORTED') {
+  if (err && 'timeout' in err && err.code === 'ECONNABORTED') {
     return true
   }
 
@@ -66,7 +66,7 @@ function shouldRetry(err, res, allowedStatuses) {
  * @param res
  * @return {Object}
  */
-function callback(err, res) {
+function callback (err, res) {
   if (this._maxRetries && this._retries++ < this._maxRetries && shouldRetry(err, res, this._allowedStatuses)) {
     var req = this
     return setTimeout(function () {
@@ -95,7 +95,7 @@ function callback(err, res) {
  * @param {Number[]} allowedStatuses
  * @return {retry}
  */
-function retry(retries, delay, allowedStatuses) {
+function retry (retries, delay, allowedStatuses) {
   if (arguments.length === 0 || retries === true) {
     retries = 1
   }
