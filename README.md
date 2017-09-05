@@ -1,6 +1,6 @@
 # superagent-retry-delay
 
-  Extends the node version of [`visionmedia/superagent`][superagent]'s `Request`, adds a `.retry` method to add retrying logic to the request. Calling this will retry the request however many additional times you'd like after a specified delay in miliseconds.
+  Extends the node version of [superagent][https://github.com/visionmedia/superagent]'s `Request`, adds a `.retry` method to add retrying logic to the request. Calling this will retry the request however many additional times you'd like after a specified delay in miliseconds.
 
   It will retry on any error condition, except for the list of response codes optionally supplied.
 
