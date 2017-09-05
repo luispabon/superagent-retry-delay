@@ -1,16 +1,16 @@
+/* eslint-env mocha */
+
 const express = require('express')
 
-const agent = require('superagent');
-require('../')(agent);
+const agent = require('superagent')
+require('../')(agent)
 
-const should = require('should')
-const assert = require('assert')
+require('should')
 const http = require('http')
 
 http.globalAgent.maxSockets = 2000
 
 describe('superagent-retry-delay', function () {
-
   describe('not-errors', function () {
     let requests = 0
     const port = 10410
@@ -18,7 +18,6 @@ describe('superagent-retry-delay', function () {
     let server
 
     before(function (done) {
-
       app.get('/', function (req, res, next) {
         requests++
         res.send('hello!')
@@ -50,7 +49,6 @@ describe('superagent-retry-delay', function () {
 
     before(function (done) {
       app.get('/', function (req, res, next) {
-
         requests++
         if (requests === 1) {
           res.sendStatus(401)
@@ -65,7 +63,6 @@ describe('superagent-retry-delay', function () {
     })
 
     it('should not retry on handled errors', function (done) {
-
       agent
         .get('http://localhost:' + port)
         .retry(5, 13, [404])
@@ -86,7 +83,6 @@ describe('superagent-retry-delay', function () {
     let server
 
     before(function (done) {
-
       app.get('/', function (req, res, next) {
         requests++
         if (requests > 4) {
@@ -100,11 +96,13 @@ describe('superagent-retry-delay', function () {
     })
 
     it('should retry on errors', function (done) {
-
       agent
         .get('http://localhost:' + port)
         .end(function (err, res) {
           res.status.should.eql(503)
+
+          // appease eslint, do nothing with error to allow it to bubble up
+          if (err) { }
         })
 
       agent
@@ -139,11 +137,13 @@ describe('superagent-retry-delay', function () {
     })
 
     it('should retry on errors', function (done) {
-
       agent
         .get('http://localhost:' + port)
         .end(function (err, res) {
           res.status.should.eql(500)
+
+          // appease eslint, do nothing with error to allow it to bubble up
+          if (err) { }
         })
 
       agent
@@ -167,7 +167,6 @@ describe('superagent-retry-delay', function () {
 
     before(function (done) {
       app.get('/', function (req, res, next) {
-
         requests++
         if (requests > 4) {
           res.send('hello!')
@@ -180,11 +179,13 @@ describe('superagent-retry-delay', function () {
     })
 
     it('should retry on errors', function (done) {
-
       agent
         .get('http://localhost:' + port)
         .end(function (err, res) {
           res.status.should.eql(404)
+
+          // appease eslint, do nothing with error to allow it to bubble up
+          if (err) { }
         })
 
       agent
@@ -208,7 +209,6 @@ describe('superagent-retry-delay', function () {
 
     before(function (done) {
       app.get('/', function (req, res, next) {
-
         requests++
         if (requests > 4) {
           res.send('hello!')
@@ -221,11 +221,13 @@ describe('superagent-retry-delay', function () {
     })
 
     it('should retry on errors', function (done) {
-
       agent
         .get('http://localhost:' + port)
         .end(function (err, res) {
           res.status.should.eql(401)
+
+          // appease eslint, do nothing with error to allow it to bubble up
+          if (err) { }
         })
 
       agent
