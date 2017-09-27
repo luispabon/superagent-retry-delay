@@ -1,6 +1,6 @@
 {
   "name": "superagent-retry-delay",
-  "version": "2.1.1",
+  "version": "2.1.2",
   "description": "A retrying layer for a superagent request with delay support",
   "license": "MIT",
   "keywords": [
