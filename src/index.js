@@ -25,7 +25,8 @@ function shouldRetry (err, res, allowedStatuses) {
     'ECONNRESET',
     'ETIMEDOUT',
     'EADDRINFO',
-    'ESOCKETTIMEDOUT'
+    'ESOCKETTIMEDOUT',
+    'ENOTFOUND'
   ]
 
   if (err && err.code && ~ERROR_CODES.indexOf(err.code)) {
