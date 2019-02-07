@@ -20,6 +20,16 @@ superagent
   .retry(2, 5000, [401, 404]) // retry twice before responding, wait 5 seconds between failures, do not retry when response is success, or 401 or 404
   .end(onresponse);
 
+superagent
+  .get('https://segment.io')
+  .retry(3, [1000, 3000, 10000], [401, 404]) // retry three times before responding, first wait 1 second, then 3 seconds, and finally 10 seconds between failures, do not retry when response is success, or 401 or 404
+  .end(onresponse);
+
+superagent
+  .get('https://segment.io')
+  .retry(5, [1000, 3000], [401, 404]) // retry five times before responding, first wait 1 second, and then wait 3 seconds between all other failures, do not retry when response is success, or 401 or 404
+  .end(onresponse);
+
 function onresponse (err, res) {
   console.log(res.status, res.headers);
   console.log(res.body);
