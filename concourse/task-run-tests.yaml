@@ -9,7 +9,8 @@ params:
 image_resource:
   type: docker-image
   source:
-    repository: node:12-alpine
+    repository: node
+    tag: latest
 
 run:
   path: code/concourse/tests.sh
