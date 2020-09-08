@@ -6,4 +6,7 @@ node_modules
 .npm
 reports
 package-lock.json
-
+credentials.yaml
+.nyc_output
+coverage/
+yarn.lock

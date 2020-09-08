@@ -1,0 +1,25 @@
+platform: linux
+
+inputs:
+  - name: code
+
+params:
+  NPM_TOKEN:
+  NPM_EMAIL:
+
+image_resource:
+  type: docker-image
+  source:
+    repository: node
+    tag: 12-alpine
+
+run:
+  path: sh
+  args:
+    - -c
+    - |
+      cd code/
+      echo _auth=$NPM_TOKEN >> ~/.npmrc
+      echo email=$NPM_EMAIL >> ~/.npmrc
+      echo always-auth=true >> ~/.npmrc
+      npm publish
