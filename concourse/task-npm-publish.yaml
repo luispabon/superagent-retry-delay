@@ -5,6 +5,7 @@ inputs:
 
 params:
   NPM_TOKEN:
+  NPM_EMAIL:
 
 image_resource:
   type: docker-image
@@ -18,4 +19,7 @@ run:
     - -c
     - |
       cd code/
+      echo _auth=$NPM_TOKEN >> ~/.npmrc
+      echo email=$NPM_EMAIL >> ~/.npmrc
+      echo always-auth=true >> ~/.npmrc
       npm publish
