@@ -11,27 +11,18 @@ resources:
   - name: code
     type: git
     source:
-      uri: https://github.com/phpdocker-io/readability-js-server.git
+      uri: https://github.com/luispabon/superagent-retry-delay.git
       branch: master
 
   - name: master-status
     type: github-status
     source:
-      repository: phpdocker-io/readability-js-server
+      repository: luispabon/superagent-retry-delay
       branch: master
       access_token: {{github-access-token}}
 
-  # Docker hub
-  - name: container-registry
-    type: docker-image
-    source:
-      email: {{docker-hub-email}}
-      username: {{docker-hub-user}}
-      password: {{docker-hub-password}}
-      repository: phpdockerio/readability-js-server
-
 jobs:
-  - name: build-and-publish-master
+  - name: analyze-master
     public: true
     plan:
       - get: code
@@ -41,12 +32,18 @@ jobs:
         resource: master-status
         params: { state: "pending", commit: "code" }
 
-      - put: container-registry
-        params:
-          build: code
-          tag_as_latest: true
-          additional_tags: code/release
+      - task: run tests
+        file: code/concourse/task-run-tests.yaml
+
+        on_failure:
+          put: master-status
+          params: { state: "failure", commit: "code" }
 
       - put: notify-build-success
         resource: master-status
         params: { state: "success", commit: "code" }
+
+      - task: code coverage reports
+        params:
+          CODECOV_TOKEN: {{codecov-token}}
+        file: code/concourse/task-codecov.yaml
