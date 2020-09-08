@@ -48,4 +48,3 @@ jobs:
         file: code/concourse/task-npm-publish.yaml
         params:
           NPM_TOKEN: {{npm-token}}
-          NPM_EMAIL: {{npm-email}}
