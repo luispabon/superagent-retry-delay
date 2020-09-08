@@ -1,6 +1,6 @@
 {
   "name": "superagent-retry-delay",
-  "version": "2.5.2",
+  "version": "2.6.0",
   "description": "A retrying layer for a superagent request with delay support",
   "license": "MIT",
   "keywords": [
@@ -20,7 +20,7 @@
   "main": "src/index",
   "dependencies": {},
   "peerDependencies": {
-    "superagent": "^3.5.0 || ^4.0 || ^5.0"
+    "superagent": "^3.5.0 || ^4.0 || ^5.0 || ^6.0"
   },
   "devDependencies": {
     "codecov": "^3.7.2",
@@ -30,7 +30,7 @@
     "nyc": "^15.1.0",
     "prettier": "^2.1.1",
     "should": "^13.2.3",
-    "superagent": "^3.5.0 || ^4.0 || ^5.0"
+    "superagent": "^3.5.0 || ^4.0 || ^5.0 || ^6.0"
   },
   "scripts": {
     "test": "node_modules/.bin/nyc --reporter=lcov mocha --color --recursive --timeout=20000 tests/",
