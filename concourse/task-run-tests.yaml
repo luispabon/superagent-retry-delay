@@ -16,4 +16,11 @@ caches:
   - path: code/node_modules
 
 run:
-  path: code/concourse/tests.sh
+  path: sh
+  args:
+    - -c
+    - |
+      cd code/
+      apk add make git
+      yarn install
+      make test lint upload-coverage
