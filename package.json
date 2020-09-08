@@ -1,6 +1,6 @@
 {
   "name": "superagent-retry-delay",
-  "version": "2.4.2",
+  "version": "2.5.0",
   "description": "A retrying layer for a superagent request with delay support",
   "license": "MIT",
   "keywords": [
@@ -13,6 +13,10 @@
     "type": "git",
     "url": "git://github.com/luispabon/superagent-retry-delay.git"
   },
+  "files": [
+    "src/",
+    "package.json"
+  ],
   "main": "src/index",
   "dependencies": {},
   "peerDependencies": {
