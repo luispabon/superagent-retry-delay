@@ -1,6 +1,6 @@
 {
   "name": "superagent-retry-delay",
-  "version": "2.5.1",
+  "version": "2.5.2",
   "description": "A retrying layer for a superagent request with delay support",
   "license": "MIT",
   "keywords": [
@@ -24,23 +24,16 @@
   },
   "devDependencies": {
     "codecov": "^3.7.2",
-    "eslint": "*",
-    "eslint-config-standard": "^10.2.1",
-    "eslint-plugin-import": "^2.7.0",
-    "eslint-plugin-mocha": "^4.11.0",
-    "eslint-plugin-node": "^5.1.1",
-    "eslint-plugin-promise": "^3.5.0",
-    "eslint-plugin-standard": "^3.0.1",
-    "express": "*",
-    "mocha": "*",
+    "express": "^4.17.1",
+    "mocha": "^8.1.3",
     "mocha-lcov-reporter": "^1.3.0",
     "nyc": "^15.1.0",
-    "should": "*",
+    "prettier": "^2.1.1",
+    "should": "^13.2.3",
     "superagent": "^3.5.0 || ^4.0 || ^5.0"
   },
   "scripts": {
     "test": "node_modules/.bin/nyc --reporter=lcov mocha --color --recursive --timeout=20000 tests/",
-    "coverage": "codecov",
-    "lint": "node_modules/.bin/eslint src tests"
+    "coverage": "codecov"
   }
 }
