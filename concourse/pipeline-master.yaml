@@ -32,9 +32,10 @@ jobs:
         resource: master-status
         params: { state: "pending", commit: "code" }
 
-      - task: run tests
+      - task: run-tests
         file: code/concourse/task-run-tests.yaml
-
+        params:
+          CODECOV_TOKEN: {{codecov-token}}
         on_failure:
           put: master-status
           params: { state: "failure", commit: "code" }
@@ -42,8 +43,3 @@ jobs:
       - put: notify-build-success
         resource: master-status
         params: { state: "success", commit: "code" }
-
-      - task: code coverage reports
-        params:
-          CODECOV_TOKEN: {{codecov-token}}
-        file: code/concourse/task-codecov.yaml
