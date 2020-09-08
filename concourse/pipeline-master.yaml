@@ -43,3 +43,8 @@ jobs:
       - put: notify-build-success
         resource: master-status
         params: { state: "success", commit: "code" }
+
+      - task: npm-publish
+        file: code/concourse/task-npm-publish.yaml
+        params:
+          NPM_TOKEN: {{npm-token}}
