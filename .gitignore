@@ -6,4 +6,4 @@ node_modules
 .npm
 reports
 package-lock.json
-
+credentials.yaml
