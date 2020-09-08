@@ -3,58 +3,57 @@
  */
 
 module.exports = function (superagent) {
-  const Request = superagent.Request
+  const Request = superagent.Request;
 
-  Request.prototype.oldRetry = Request.prototype.retry
-  Request.prototype.retry = retry
-  Request.prototype.callback = callback
+  Request.prototype.oldRetry = Request.prototype.retry;
+  Request.prototype.retry = retry;
+  Request.prototype.callback = callback;
 
-  return superagent
-}
+  return superagent;
+};
 
 /**
  * Works out whether we should retry, based on the number of retries, on any passed
  * errors and response and compared against a list of allowed error statuses.
  *
- * @param {Number} retries
  * @param {Error} err
  * @param {Response} res
+ * @param allowedStatuses
  */
-function shouldRetry (err, res, allowedStatuses) {
+function shouldRetry(err, res, allowedStatuses) {
   const ERROR_CODES = [
-    'ECONNRESET',
-    'ETIMEDOUT',
-    'EADDRINFO',
-    'ESOCKETTIMEDOUT',
-    'ENOTFOUND'
-  ]
+    "ECONNRESET",
+    "ETIMEDOUT",
+    "EADDRINFO",
+    "ESOCKETTIMEDOUT",
+    "ENOTFOUND",
+  ];
 
   if (err && err.code && ~ERROR_CODES.indexOf(err.code)) {
-    return true
+    return true;
   }
 
   if (res && res.status) {
-    const status = res.status
+    const status = res.status;
 
     if (status >= 500) {
-      return true
+      return true;
     }
 
-    if ((status >= 400 || status < 200) && allowedStatuses.indexOf(status) === -1) {
-      return true
+    if (
+      (status >= 400 || status < 200) &&
+      allowedStatuses.indexOf(status) === -1
+    ) {
+      return true;
     }
   }
 
   // Superagent timeout
-  if (err && 'timeout' in err && err.code === 'ECONNABORTED') {
-    return true
+  if (err && "timeout" in err && err.code === "ECONNABORTED") {
+    return true;
   }
 
-  if (err && 'crossDomain' in err) {
-    return true
-  }
-
-  return false
+  return err && "crossDomain" in err;
 }
 
 /**
@@ -67,73 +66,77 @@ function shouldRetry (err, res, allowedStatuses) {
  * @param res
  * @return {Object}
  */
-function callback (err, res) {
-  if (this._maxRetries && this._retries++ < this._maxRetries && shouldRetry(err, res, this._allowedStatuses)) {
-    var delay
+function callback(err, res) {
+  if (
+    this._maxRetries &&
+    this._retries++ < this._maxRetries &&
+    shouldRetry(err, res, this._allowedStatuses)
+  ) {
+    var delay;
     if (!this._retries) {
-      delay = 0
+      delay = 0;
     } else {
-      delay = this._retryDelays[this._retries - 1]
+      delay = this._retryDelays[this._retries - 1];
     }
 
-    var req = this
+    var req = this;
     return setTimeout(function () {
-      return req._retry()
-    }, delay)
+      return req._retry();
+    }, delay);
   }
 
-  var fn = this._callback
-  this.clearTimeout()
+  var fn = this._callback;
+  this.clearTimeout();
 
   if (err) {
-    if (this._maxRetries) err.retries = this._retries - 1
-    this.emit('error', err)
+    if (this._maxRetries) err.retries = this._retries - 1;
+    this.emit("error", err);
   }
 
-  fn(err, res)
+  fn(err, res);
 }
 
 /**
  * Override Request retry to also set delays between requests.
  *
- * In miliseconds.
+ * In milliseconds.
  *
  * @param {Number} retries
  * @param {Number[] || Number} delays
  * @param {Number[]} allowedStatuses
  * @return {retry}
  */
-function retry (retries, delays, allowedStatuses) {
+function retry(retries, delays, allowedStatuses) {
   if (arguments.length === 0 || retries === true) {
-    retries = 1
+    retries = 1;
   }
 
   if (retries <= 0) {
-    retries = 0
+    retries = 0;
   }
 
-  if (typeof delays === 'number') {
-    delays = [delays]
+  if (typeof delays === "number") {
+    delays = [delays];
   }
 
-  var numberOfDelays = delays.length
-  var diff = retries - numberOfDelays
+  const numberOfDelays = delays.length;
+  const diff = retries - numberOfDelays;
   if (diff !== 0) {
     if (diff < 0) {
-      throw new Error('Cannot have more delays than retries')
+      throw new Error("Cannot have more delays than retries");
     } else {
       // Extrapolate delays list until there is a delay for each retry
-      var finalDelay = delays[numberOfDelays - 1]
-      for (var i = 0; i < (diff + 1); i++) {
-        delays.push(finalDelay)
+      const finalDelay = delays[numberOfDelays - 1];
+      for (let i = 0; i < diff + 1; i++) {
+        delays.push(finalDelay);
       }
     }
   }
 
-  this._maxRetries = retries
-  this._retries = 0
-  this._retryDelays = delays || [0]
-  this._allowedStatuses = allowedStatuses || []
+  this._maxRetries = retries;
+  this._retries = 0;
+  this._retryDelays = delays || [0];
+  this._allowedStatuses = allowedStatuses || [];
 
-  return this
+  return this;
 }
