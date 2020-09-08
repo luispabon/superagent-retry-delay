@@ -72,20 +72,20 @@ function callback(err, res) {
     this._retries++ < this._maxRetries &&
     shouldRetry(err, res, this._allowedStatuses)
   ) {
-    let delay
+    let delay;
     if (!this._retries) {
       delay = 0;
     } else {
       delay = this._retryDelays[this._retries - 1];
     }
 
-    const req = this
+    const req = this;
     return setTimeout(function () {
       return req._retry();
     }, delay);
   }
 
-  const fn = this._callback
+  const fn = this._callback;
   this.clearTimeout();
 
   if (err) {
