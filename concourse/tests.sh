@@ -7,9 +7,8 @@ INITIAL_FOLDER=`pwd`
 
 # cd into the codebase, as per CI source
 cd code
-mkdir reports
 
-# Install xdebug & disable
+apk add make
 yarn install
 make test coverage
 
