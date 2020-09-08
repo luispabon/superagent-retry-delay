@@ -28,7 +28,7 @@ jobs:
           path: code
           status: pending
 
-      - task: run tests
+      - task: run-tests
         file: code/concourse/task-run-tests.yaml
         params:
           CODECOV_TOKEN: {{codecov-token}}
