@@ -12,5 +12,8 @@ image_resource:
     repository: node
     tag: 12-alpine
 
+caches:
+  - path: code/node_modules
+
 run:
   path: code/concourse/tests.sh

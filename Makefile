@@ -2,7 +2,7 @@
 test:
 	yarn test
 
-coverage:
+upload-coverage:
 	yarn coverage
 
 publish:
