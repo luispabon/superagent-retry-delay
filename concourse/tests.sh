@@ -6,6 +6,6 @@ set -e
 # cd into the codebase, as per CI source
 cd code
 
-apk add make
+apk add make git
 yarn install
 make test upload-coverage
