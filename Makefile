@@ -1,8 +1,8 @@
 lint:
-	yarn prettier -c src/
+	yarn prettier -c src/ tests/
 
 lint-fix:
-	yarn prettier -w src/
+	yarn prettier -w src/ tests/
 
 test:
 	yarn test
