@@ -27,6 +27,7 @@ function shouldRetry(err, res, allowedStatuses) {
     "EADDRINFO",
     "ESOCKETTIMEDOUT",
     "ENOTFOUND",
+    "ECONNREFUSED",
   ];
 
   if (err && err.code && ~ERROR_CODES.indexOf(err.code)) {
