@@ -4,8 +4,8 @@ resource_types:
   - name: github-status
     type: docker-image
     source:
-      repository: resource/github-status
-      tag: master
+      repository: "registry.barth.tech/library/github-status-resource" # +
+      tag: "latest"
 
 resources:
   - name: code
@@ -17,7 +17,9 @@ resources:
   - name: master-status
     type: github-status
     source:
-      repo: luispabon/superagent-retry-delay
+      owner: luispabon
+      repository: superagent-retry-delay
+      branch: master
       access_token: {{github-access-token}}
 
 jobs:
