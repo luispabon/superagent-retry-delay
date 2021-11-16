@@ -14,9 +14,6 @@ lint-fix:
 test:
 	$(NODE_RUN) yarn test
 
-upload-coverage:
-	$(NODE_RUN) yarn coverage
-
 publish:
 	docker-run-root node:alpine sh -c "/usr/local/bin/npm adduser; /usr/local/bin/npm publish"
 

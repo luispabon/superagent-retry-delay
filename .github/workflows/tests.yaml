@@ -33,17 +33,10 @@ jobs:
       - name: Linting
         run: make lint
 
-#      - name: Upload coverage
-#        run: |
-#          apt update
-#          apt install git --no-install-recommends -y
-#          make upload-coverage
+      - name: Unit tests
+        run: make test
 
       - uses: codecov/codecov-action@v2
         with:
           token: ${{ secrets.CODECOV_TOKEN }} # not required for public repos
-#          files: ./reports/phpunit/coverage.xml # optional
-#          flags: unittests # optional
-#          name: codecov-umbrella # optional
-#          fail_ci_if_error: true # optional (default = false)
-          verbose: false # optional (default = false)
+          verbose: false
