@@ -1,0 +1,37 @@
+name: "Test application"
+
+on:
+  push:
+    branches:
+      - master
+  pull_request:
+    branches:
+      - master
+
+  # Allow workflow to be manually run from the GitHub UI
+  workflow_dispatch:
+
+jobs:
+  tests:
+    timeout-minutes: 10
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        include:
+          - node:12-alpine
+
+    env:
+      NODE_CONTAINER: ${{ matrix }}
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v1
+
+      - name: Initialise environment
+        run: make install
+
+      - name: Linting
+        run: make lint
+
+      - name: Upload coverage
+        run: make upload-coverage
