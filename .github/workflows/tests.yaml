@@ -34,4 +34,7 @@ jobs:
         run: make lint
 
       - name: Upload coverage
-        run: make upload-coverage
+        run: |
+          apt update
+          apt install git --no-install-recommends -y
+          make upload-coverage
