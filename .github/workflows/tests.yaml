@@ -17,11 +17,11 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        include:
+        node_container:
           - node:12-alpine
 
     env:
-      NODE_CONTAINER: ${{ matrix }}
+      NODE_CONTAINER: ${{ matrix.node_container }}
 
     steps:
       - name: Checkout
