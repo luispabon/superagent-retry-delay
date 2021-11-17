@@ -5,6 +5,9 @@ on:
     types:
       - published
 
+  # Allow workflow to be manually run from the GitHub UI
+  workflow_dispatch:
+
 jobs:
   publish:
     timeout-minutes: 10
