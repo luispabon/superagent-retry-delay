@@ -1,6 +1,6 @@
 NODE_CONTAINER?=node:16-alpine
 
-NODE_RUN=docker run --net=host -v ~/.paloalto/openssl.cnf:/etc/openssl.cnf -v ~/.paloalto/paloalto_roots.pem:/etc/ssl/certs/paloalto_roots.pem --env-file ~/.paloalto/certs.env --rm -v "$(PWD):/workdir" -w "/workdir" --rm $(NODE_CONTAINER)
+NODE_RUN=docker run --rm -v "$(PWD):/workdir" -w "/workdir" --rm $(NODE_CONTAINER)
 
 install:
 	$(NODE_RUN) yarn install
