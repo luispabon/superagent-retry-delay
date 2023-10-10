@@ -30,6 +30,17 @@ superagent
   .retry(5, [1000, 3000], [401, 404]) // retry five times before responding, first wait 1 second, and then wait 3 seconds between all other failures, do not retry when response is success, or 401 or 404
   .end(onresponse);
 
+superagent
+  .get('https://segment.io')
+  .retry(5, [1000, 3000], [], (res, err) => {
+    if(res.status === 400 && res.text.includes('banana')) {
+      return true
+    } 
+    return false;
+  }) // retry five times before responding, first wait 1 second, and then wait 3 seconds between all other failures, retry if code is 400 and body contains banana
+  .end(onresponse);
+
+
 function onresponse (err, res) {
   console.log(res.status, res.headers);
   console.log(res.body);
