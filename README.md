@@ -35,7 +35,7 @@ function retry (retries, delays, allowedStatuses, retryCallback) {}
     * **a list of numbers:** delays between the first few retries, in order given. If there are more retries than
       numbers on this list, any subsequent retries will be delayed by the last number on the list.
 * `allowedStatuses`: list of HTTP statuses that aren't considered a failure by which we need to retry
-* `retryCallback`: this callback takes a single argument, the `response` object, and must performs an evaluation on it
+* `retryCallback`: this callback takes two arguments, the err, and the `response` object, and must performs an evaluation on it
   that must return either `true` or `false`. Returning `false` stops any further retries.
 
 ### Examples
@@ -61,7 +61,7 @@ superagent
 
 superagent
   .get('https://segment.io')
-  .retry(5, [1000, 3000], [], (res, err) => {
+  .retry(5, [1000, 3000], [], (err, res) => {
     if (res.status === 400 && res.text.includes('banana')) {
       return true
     }
