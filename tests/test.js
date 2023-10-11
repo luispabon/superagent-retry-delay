@@ -371,6 +371,76 @@ describe("superagent-retry-delay", function () {
     });
   });
 
+  describe("uses provided callback and not statuses", function () {
+    let requests = 0;
+    const port = 10410;
+    const app = express();
+    let server;
+
+    before(function (done) {
+      app.get("/", function (req, res, next) {
+        requests++;
+        if (requests > 4) {
+          res.send("hello!");
+        } else {
+          res.sendStatus(421);
+        }
+      });
+
+      server = app.listen(port, done);
+    });
+    it("should retry if callback says to even if errorcode not included", function (done) {
+      agent.get("http://localhost:" + port).end(function (err, res) {
+        res.status.should.eql(421);
+
+        // appease eslint, do nothing with error to allow it to bubble up
+        if (err) {
+        }
+      });
+
+      agent
+        .get("http://localhost:" + port)
+        .retry(5, 13, [419], (err, res) => {
+          if (res.status !== 200) {
+            return true;
+          }
+          return false;
+        })
+        .end(function (err, res) {
+          res.text.should.eql("hello!");
+          requests.should.eql(5);
+          done(err);
+        });
+    });
+
+    it("should not retry if callback says to even if errorcode is included", function (done) {
+      agent.get("http://localhost:" + port).end(function (err, res) {
+        res.status.should.eql(421);
+
+        // appease eslint, do nothing with error to allow it to bubble up
+        if (err) {
+        }
+      });
+
+      agent
+        .get("http://localhost:" + port)
+        .retry(5, 13, [421], (err, res) => false)
+        .end(function (err, res) {
+          res.text.should.eql("Misdirected Request");
+          requests.should.eql(2);
+          done(err);
+        });
+    });
+
+    afterEach(function () {
+      requests = 0;
+    });
+
+    after(function (done) {
+      server.close(done);
+    });
+  });
+
   describe("specifying different delays between retries", function () {
     let requests = 0;
     let delays;
