@@ -18,11 +18,13 @@ module.exports = function (superagent) {
  *
  * @param {Error} err
  * @param {Response} res
- * @param allowedStatuses
+ * @param {Number[]} allowedStatuses
+ * @param {retryCallback} retryCallback
+ * @callback retryCallback
  */
-function shouldRetry(err, res, allowedStatuses, callback) {
-  if (callback) {
-    return callback(err, res);
+function shouldRetry(err, res, allowedStatuses, retryCallback) {
+  if (retryCallback) {
+    return retryCallback(err, res);
   }
   const ERROR_CODES = [
     "ECONNRESET",
@@ -108,9 +110,11 @@ function callback(err, res) {
  * @param {Number} retries
  * @param {Number[] || Number} delays
  * @param {Number[]} allowedStatuses
+ * @param {retryCallback} retryCallback
+ * @callback retryCallback
  * @return {retry}
  */
-function retry(retries, delays, allowedStatuses, callback) {
+function retry(retries, delays, allowedStatuses, retryCallback) {
   if (arguments.length === 0 || retries === true) {
     retries = 1;
   }
@@ -141,6 +145,6 @@ function retry(retries, delays, allowedStatuses, callback) {
   this._retries = 0;
   this._retryDelays = delays || [0];
   this._allowedStatuses = allowedStatuses || [];
-  this._retryCallback = callback;
+  this._retryCallback = retryCallback;
   return this;
 }
