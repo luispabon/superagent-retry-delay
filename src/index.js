@@ -90,13 +90,37 @@ function callback(err, res) {
       return req._retry();
     }, delay);
   }
-
   const fn = this._callback;
   this.clearTimeout();
 
+  if (!err) {
+    try {
+      if (!this._isResponseOK(res)) {
+        let message = 'Unsuccessful HTTP response';
+        if (res) {
+          message = http.STATUS_CODES[res.status] || message;
+        }
+
+        err = new Error(message);
+        err.status = res ? res.status : undefined;
+      }
+    } catch (e) {
+      error = e;
+      error.status = error.status || (res ? res.status : undefined);
+    }
+  }
+  if (!err) {
+    return fn(null, res);
+  }
+
+  err.response = res;
+
+
   if (err) {
     if (this._maxRetries) err.retries = this._retries - 1;
-    this.emit("error", err);
+    if (err && this.listeners('error').length > 0) {
+      this.emit('error', err);
+    }
   }
 
   fn(err, res);
