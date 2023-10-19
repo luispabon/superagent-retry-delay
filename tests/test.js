@@ -89,7 +89,9 @@ describe("superagent-retry-delay", function () {
         .end(function (err, res) {
           res.status.should.eql(404);
           requests.should.eql(3);
-          done(err);
+          err.response.status.should.eql(404);
+          err.message.should.eql("Not Found");
+          done();
         });
     });
 
@@ -100,7 +102,9 @@ describe("superagent-retry-delay", function () {
         .end(function (err, res) {
           res.status.should.eql(404);
           requests.should.eql(3);
-          done(err);
+          err.response.status.should.eql(404);
+          err.message.should.eql("Not Found");
+          done();
         });
     });
 
@@ -428,7 +432,8 @@ describe("superagent-retry-delay", function () {
         .end(function (err, res) {
           res.text.should.eql("Misdirected Request");
           requests.should.eql(2);
-          done(err);
+          err.message.should.eql("Misdirected Request");
+          done();
         });
     });
 

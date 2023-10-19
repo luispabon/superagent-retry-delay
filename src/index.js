@@ -1,4 +1,4 @@
-const http = require('http');
+const http = require("http");
 /**
  * Add to the request prototype.
  */
@@ -97,7 +97,7 @@ function callback(err, res) {
   if (!err) {
     try {
       if (!this._isResponseOK(res)) {
-        let message = 'Unsuccessful HTTP response';
+        let message = "Unsuccessful HTTP response";
         if (res) {
           message = http.STATUS_CODES[res.status] || message;
         }
@@ -116,11 +116,10 @@ function callback(err, res) {
 
   err.response = res;
 
-
   if (err) {
     if (this._maxRetries) err.retries = this._retries - 1;
-    if (err && this.listeners('error').length > 0) {
-      this.emit('error', err);
+    if (err && this.listeners("error").length > 0) {
+      this.emit("error", err);
     }
   }
 
