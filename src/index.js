@@ -1,3 +1,4 @@
+const http = require('http');
 /**
  * Add to the request prototype.
  */
@@ -105,8 +106,8 @@ function callback(err, res) {
         err.status = res ? res.status : undefined;
       }
     } catch (e) {
-      error = e;
-      error.status = error.status || (res ? res.status : undefined);
+      err = e;
+      err.status = err.status || (res ? res.status : undefined);
     }
   }
   if (!err) {
