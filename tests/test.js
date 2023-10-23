@@ -33,11 +33,11 @@ describe("superagent-retry-delay", function () {
       let received = false;
       agent
         .get("http://localhost:" + port)
-        .on('error', (err) => {
+        .on("error", (err) => {
           received = true;
         })
         .end(function (err, res) {
-          res.text.should.eql("Not Found");          
+          res.text.should.eql("Not Found");
           err.response.status.should.eql(404);
           err.status.should.eql(404);
           err.message.should.eql("Not Found");
@@ -49,17 +49,17 @@ describe("superagent-retry-delay", function () {
 
     it("catches errors in the _isResponseOK and returns", function (done) {
       const oldHandler = agent.Request.prototype._isResponseOK;
-      agent.Request.prototype._isResponseOK = (res) => { throw new Error("_isResponseOK callback error");};
-      agent
-        .get("http://localhost:" + port)
-        .end(function (err, res) {
-          res.text.should.eql("Not Found");
-          err.response.status.should.eql(404);
-          err.message.should.eql("_isResponseOK callback error");
-          requests.should.eql(1);
-          agent.Request.prototype._isResponseOK = oldHandler;
-          done();
-        });
+      agent.Request.prototype._isResponseOK = (res) => {
+        throw new Error("_isResponseOK callback error");
+      };
+      agent.get("http://localhost:" + port).end(function (err, res) {
+        res.text.should.eql("Not Found");
+        err.response.status.should.eql(404);
+        err.message.should.eql("_isResponseOK callback error");
+        requests.should.eql(1);
+        agent.Request.prototype._isResponseOK = oldHandler;
+        done();
+      });
     });
 
     after(function (done) {
