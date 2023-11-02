@@ -1,4 +1,4 @@
-NODE_CONTAINER?=node:16-alpine
+NODE_CONTAINER?=node:20-alpine
 
 NODE_RUN=docker run --rm -v "$(PWD):/workdir" -w "/workdir" --rm $(NODE_CONTAINER)
 
