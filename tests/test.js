@@ -11,6 +11,61 @@ const http = require("http");
 http.globalAgent.maxSockets = 2000;
 
 describe("superagent-retry-delay", function () {
+  describe("error synthesizing", function () {
+    let requests = 0;
+    const port = 10410;
+    const app = express();
+    let server;
+    before(function (done) {
+      app.get("/", function (req, res, next) {
+        requests++;
+        res.sendStatus(404);
+      });
+
+      server = app.listen(port, done);
+    });
+
+    afterEach(function () {
+      requests = 0;
+    });
+
+    it("emits error when listener is attached", function (done) {
+      let received = false;
+      agent
+        .get("http://localhost:" + port)
+        .on("error", (err) => {
+          received = true;
+        })
+        .end(function (err, res) {
+          res.text.should.eql("Not Found");
+          err.response.status.should.eql(404);
+          err.status.should.eql(404);
+          err.message.should.eql("Not Found");
+          requests.should.eql(1);
+          received.should.eql(true);
+          done();
+        });
+    });
+
+    it("catches errors in the _isResponseOK and returns", function (done) {
+      const oldHandler = agent.Request.prototype._isResponseOK;
+      agent.Request.prototype._isResponseOK = (res) => {
+        throw new Error("_isResponseOK callback error");
+      };
+      agent.get("http://localhost:" + port).end(function (err, res) {
+        res.text.should.eql("Not Found");
+        err.response.status.should.eql(404);
+        err.message.should.eql("_isResponseOK callback error");
+        requests.should.eql(1);
+        agent.Request.prototype._isResponseOK = oldHandler;
+        done();
+      });
+    });
+
+    after(function (done) {
+      server.close(done);
+    });
+  });
   describe("not-errors", function () {
     let requests = 0;
     const port = 10410;
@@ -89,7 +144,9 @@ describe("superagent-retry-delay", function () {
         .end(function (err, res) {
           res.status.should.eql(404);
           requests.should.eql(3);
-          done(err);
+          err.response.status.should.eql(404);
+          err.message.should.eql("Not Found");
+          done();
         });
     });
 
@@ -100,7 +157,9 @@ describe("superagent-retry-delay", function () {
         .end(function (err, res) {
           res.status.should.eql(404);
           requests.should.eql(3);
-          done(err);
+          err.response.status.should.eql(404);
+          err.message.should.eql("Not Found");
+          done();
         });
     });
 
@@ -428,7 +487,8 @@ describe("superagent-retry-delay", function () {
         .end(function (err, res) {
           res.text.should.eql("Misdirected Request");
           requests.should.eql(2);
-          done(err);
+          err.message.should.eql("Misdirected Request");
+          done();
         });
     });
 
