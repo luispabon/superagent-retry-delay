@@ -359,6 +359,25 @@ describe("superagent-retry-delay", function () {
         });
     });
 
+    it("should retry on errors - no delay provided", function (done) {
+      agent.get("http://localhost:" + port).end(function (err, res) {
+        res.status.should.eql(404);
+
+        // appease eslint, do nothing with error to allow it to bubble up
+        if (err) {
+        }
+      });
+
+      agent
+        .get("http://localhost:" + port)
+        .retry(5)
+        .end(function (err, res) {
+          res.text.should.eql("hello!");
+          requests.should.eql(5);
+          done(err);
+        });
+    });
+
     after(function (done) {
       server.close(done);
     });
